@@ -21,7 +21,7 @@ public class TouchButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     void Awake()
     {
-        reader = FindFirstObjectByType<PlayerInputReader>();
+        reader = FindAnyObjectByType<PlayerInputReader>();
         image = GetComponent<Image>();
         if (image != null)
         {
@@ -37,7 +37,7 @@ public class TouchButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Set(bool pressed)
     {
         if (image != null) image.color = pressed ? pressedColor : baseColor;
-        if (reader == null) reader = FindFirstObjectByType<PlayerInputReader>();
+        if (reader == null) reader = FindAnyObjectByType<PlayerInputReader>();
         if (reader == null) return;
         switch (action)
         {
