@@ -1,0 +1,14 @@
+Audio assets — all CC0 (public domain) from OpenGameArt.org.
+CC0 requires no attribution; credited here as good practice.
+
+Background music: "Retro Game Music Pack" (Level 1) by Juhani Junkala
+  Source: https://opengameart.org/content/5-chiptunes-action  (CC0)
+  File: Music/bgm_level.wav
+
+Jump SFX: "8-BIT Jump #1" by Jesus Lastra (jalastram)
+  Source: https://opengameart.org/content/8-bit-jump-1  (CC0)
+  File: SFX/sfx_jump.wav  (SFX_Jump_09)
+
+Land / stomp SFX: "8-Bit Sound Effect Pack (Vol. 001)" by Deva (@Shades)
+  Source: https://opengameart.org/content/8-bit-sound-effect-pack-vol-001  (CC0)
+  File: SFX/sfx_land.wav  (Hit 3)

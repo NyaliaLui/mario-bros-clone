@@ -11,18 +11,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovementConfig config;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private PlayerInputReader input;
+    [SerializeField] private AudioClip jumpSfx;
+    [SerializeField] private AudioClip landSfx;
 
     private Rigidbody2D rb;
     private CapsuleCollider2D col;
 
     private float coyoteCounter;
     private bool isJumping;
+    private bool wasGrounded;
 
     public bool IsGrounded { get; private set; }
-    
+
     public bool IsBig { get; set; }
     private Vector2 lastVelocity;
-public Rigidbody2D Body => rb;
+    public Rigidbody2D Body => rb;
 
     void Awake()
     {
@@ -36,6 +39,11 @@ public Rigidbody2D Body => rb;
         if (config == null || input == null) return;
 
         IsGrounded = CheckGrounded();
+
+        // ----- Landing SFX (airborne -> grounded transition) -----
+        if (IsGrounded && !wasGrounded && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySfx(landSfx);
+
         float dt = Time.fixedDeltaTime;
 
         // ----- Horizontal movement -----
@@ -69,6 +77,7 @@ public Rigidbody2D Body => rb;
             isJumping = true;
             coyoteCounter = 0f;
             input.ConsumeJump();
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySfx(jumpSfx);
         }
 
         // ----- Variable height: jump cut on release -----
@@ -87,6 +96,7 @@ public Rigidbody2D Body => rb;
 
         rb.linearVelocity = new Vector2(vx, vy);
         lastVelocity = rb.linearVelocity;
+        wasGrounded = IsGrounded;
         // (Facing/sprite flip lives in PlayerSpriteAnimator.)
     }
 
@@ -108,12 +118,12 @@ public Rigidbody2D Body => rb;
         }
     }
 
-
-    /// <summary>Bounce the player upward (used by enemy stomps).</summary>
+    /// <summary>Bounce the player upward (used by enemy stomps). Plays the land SFX.</summary>
     public void Bounce(float force)
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
         isJumping = false;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySfx(landSfx);
     }
 
     private bool CheckGrounded()

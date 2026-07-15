@@ -30,6 +30,7 @@ public class KoopaController : EnemyBase, IStompable
         {
             if (ShellHitsWall()) shellDir = -shellDir;
             rb.linearVelocity = new Vector2(shellDir * shellSpeed, rb.linearVelocity.y);
+            KillEnemiesInPath();
         }
         else // Shell idle
         {
@@ -45,18 +46,24 @@ public class KoopaController : EnemyBase, IStompable
         return Physics2D.Raycast(origin, new Vector2(dirX, 0f), 0.12f, groundMask);
     }
 
+    // A sliding shell mows down enemies it overlaps (they no longer collide physically).
+    private void KillEnemiesInPath()
+    {
+        Bounds b = col.bounds;
+        var hits = Physics2D.OverlapBoxAll(b.center, b.size, 0f, 1 << gameObject.layer);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            var other = hits[i].GetComponent<EnemyBase>();
+            if (other != null && other != this && !other.IsDead) other.Die();
+        }
+    }
+
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (dead) return;
-        if (collision.collider.CompareTag("Player"))
-        {
-            HandlePlayer(collision);
-        }
-        else if (state == KState.Sliding)
-        {
-            var other = collision.collider.GetComponent<EnemyBase>();
-            if (other != null && other != this && !other.IsDead) other.Die();
-        }
+        // Enemy-vs-enemy no longer collides physically; only the player is handled here.
+        if (collision.collider.CompareTag("Player")) HandlePlayer(collision);
     }
 
     private void HandlePlayer(Collision2D collision)

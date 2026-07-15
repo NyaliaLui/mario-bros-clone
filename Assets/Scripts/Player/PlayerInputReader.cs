@@ -3,7 +3,8 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// Wraps the shared InputActionAsset and exposes plain fields so gameplay
-/// scripts never touch Input System types directly.
+/// scripts never touch Input System types directly. Also merges "virtual"
+/// input from on-screen touch buttons (see TouchButton).
 /// </summary>
 public class PlayerInputReader : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class PlayerInputReader : MonoBehaviour
 
     private InputActionMap map;
     private InputAction moveAction, jumpAction, sprintAction, crouchAction, interactAction;
+
+    // Virtual input from on-screen touch buttons.
+    private bool vLeft, vRight, vJump, vJumpPrev;
 
     public float MoveX { get; private set; }
     public float MoveY { get; private set; }
@@ -24,6 +28,11 @@ public class PlayerInputReader : MonoBehaviour
     public float LastJumpPressedTime { get; private set; } = -999f;
 
     public void ConsumeJump() { LastJumpPressedTime = -999f; }
+
+    // --- Virtual (touch) input API ---
+    public void SetTouchLeft(bool pressed) { vLeft = pressed; }
+    public void SetTouchRight(bool pressed) { vRight = pressed; }
+    public void SetTouchJump(bool pressed) { vJump = pressed; }
 
     void Awake()
     {
@@ -50,12 +59,21 @@ public class PlayerInputReader : MonoBehaviour
     void Update()
     {
         if (map == null) return;
+
         Vector2 mv = moveAction.ReadValue<Vector2>();
-        MoveX = mv.x;
+        float mvx = mv.x;
+        int v = (vRight ? 1 : 0) - (vLeft ? 1 : 0);
+        if (v != 0) mvx = v;
+        MoveX = mvx;
         MoveY = mv.y;
-        JumpHeld = jumpAction.IsPressed();
+
         SprintHeld = sprintAction.IsPressed();
         CrouchHeld = crouchAction.IsPressed();
         InteractHeld = interactAction.IsPressed();
+
+        // Jump: keyboard/gamepad OR virtual button. Virtual rising edge feeds the buffer.
+        if (vJump && !vJumpPrev) LastJumpPressedTime = Time.time;
+        vJumpPrev = vJump;
+        JumpHeld = jumpAction.IsPressed() || vJump;
     }
 }
