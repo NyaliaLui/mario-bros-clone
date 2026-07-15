@@ -28,6 +28,8 @@ public abstract class EnemyBase : MonoBehaviour
         if (dead || config == null) return;
         if (ShouldTurn()) facing = -facing;
         rb.linearVelocity = new Vector2(facing * config.moveSpeed, rb.linearVelocity.y);
+        // Art faces left natively; flip when walking right.
+        if (sr != null) sr.flipX = facing > 0;
     }
 
     protected virtual bool ShouldTurn()

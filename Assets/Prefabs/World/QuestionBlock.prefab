@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1024382176654942071}
   - component: {fileID: 5517974672213340084}
   - component: {fileID: 3229754519918264213}
+  - component: {fileID: 6500566995379457957}
   m_Layer: 12
   m_Name: QuestionBlock
   m_TagString: Untagged
@@ -83,7 +84,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 3ae737a65515c3d479535395d208270f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 36b2140497feb0e48a70838ef7d7d375, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -131,7 +132,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.9564394}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -157,5 +158,24 @@ MonoBehaviour:
   content: 0
   coinPopPrefab: {fileID: 7320761564548374360, guid: 4bb9020239b58a648b73b5511cfc506a, type: 3}
   mushroomPrefab: {fileID: 0}
-  usedSprite: {fileID: 0}
-  usedColor: {r: 0.5, g: 0.35, b: 0.2, a: 1}
+  usedSprite: {fileID: 21300000, guid: 665126ed59403e848b99e846d2e456ab, type: 3}
+  usedColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &6500566995379457957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1005949582051732194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be5517ac1427a243a2d6cc42d62e5c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteFlipbook
+  frames:
+  - {fileID: 21300000, guid: 36b2140497feb0e48a70838ef7d7d375, type: 3}
+  - {fileID: 21300000, guid: 0ff29c679b2d88c4e9ac94dfd93a2d0b, type: 3}
+  - {fileID: 21300000, guid: eef187135f190124a95f76754106cd25, type: 3}
+  fps: 3
+  loop: 1
+  playOnEnable: 1

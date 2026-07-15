@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private CapsuleCollider2D col;
-    private SpriteRenderer sr;
 
     private float coyoteCounter;
     private bool isJumping;
@@ -29,7 +28,6 @@ public Rigidbody2D Body => rb;
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
-        sr = GetComponentInChildren<SpriteRenderer>();
         if (input == null) input = GetComponent<PlayerInputReader>();
     }
 
@@ -89,9 +87,7 @@ public Rigidbody2D Body => rb;
 
         rb.linearVelocity = new Vector2(vx, vy);
         lastVelocity = rb.linearVelocity;
-
-        // ----- Facing -----
-        if (Mathf.Abs(input.MoveX) > 0.01f && sr != null) sr.flipX = input.MoveX < 0f;
+        // (Facing/sprite flip lives in PlayerSpriteAnimator.)
     }
 
     void OnCollisionEnter2D(Collision2D collision)

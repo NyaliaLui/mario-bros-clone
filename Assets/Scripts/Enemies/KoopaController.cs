@@ -13,6 +13,9 @@ public class KoopaController : EnemyBase, IStompable
     [SerializeField] private KState state = KState.Walking;
     [SerializeField] private float shellSpeed = 9f;
     [SerializeField] private float shellSquash = 0.6f;
+    [SerializeField] private Sprite shellSprite;
+    [SerializeField] private Sprite[] spinFrames;
+    [SerializeField] private float spinFps = 14f;
 
     private int shellDir = 1;
 
@@ -80,15 +83,10 @@ public class KoopaController : EnemyBase, IStompable
     public void OnStomped(PlayerController player)
     {
         if (dead) return;
-        if (state == KState.Walking)
+        if (state == KState.Walking || state == KState.Sliding)
         {
             state = KState.Shell;
-            Squash();
-            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-        }
-        else if (state == KState.Sliding)
-        {
-            state = KState.Shell;
+            ShowShell();
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         }
         // Shell idle + stomp: just bounce the player.
@@ -100,12 +98,24 @@ public class KoopaController : EnemyBase, IStompable
         float dir = Mathf.Sign(transform.position.x - sourceX);
         shellDir = dir == 0 ? 1 : (int)dir;
         state = KState.Sliding;
+        var fb = GetComponent<SpriteFlipbook>();
+        if (fb != null && spinFrames != null && spinFrames.Length > 0)
+        {
+            fb.SetFps(spinFps);
+            fb.Play(spinFrames);
+        }
     }
 
-    private void Squash()
+    private void ShowShell()
     {
+        var fb = GetComponent<SpriteFlipbook>();
+        if (fb != null) fb.Stop();
         if (sr == null) return;
-        var t = sr.transform;
-        t.localScale = new Vector3(t.localScale.x, t.localScale.y * shellSquash, 1f);
+        if (shellSprite != null) sr.sprite = shellSprite;
+        else
+        {
+            var t = sr.transform;
+            t.localScale = new Vector3(t.localScale.x, t.localScale.y * shellSquash, 1f);
+        }
     }
 }

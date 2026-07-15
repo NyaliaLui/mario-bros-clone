@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7718612812848751222}
   - component: {fileID: 3323894671861548965}
   - component: {fileID: 8696876521028152620}
+  - component: {fileID: 9085864748515787281}
   m_Layer: 10
   m_Name: Goomba
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,7 +85,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 2cc11201918c6214fa81c58b55541c8d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2b58eb508e45a15478ee1f1d5af41da9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -155,17 +156,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.02}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.94358975, y: 1}
+    oldSize: {x: 1.2446429, y: 0.84999996}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.75, y: 0.8}
   m_EdgeRadius: 0
 --- !u!114 &8696876521028152620
 MonoBehaviour:
@@ -184,3 +185,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   facing: -1
+  squashedSprite: {fileID: 21300000, guid: 1e2a7bf353d47684abe70e1b088d3098, type: 3}
+--- !u!114 &9085864748515787281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6027158717135155669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be5517ac1427a243a2d6cc42d62e5c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteFlipbook
+  frames:
+  - {fileID: 21300000, guid: 2b58eb508e45a15478ee1f1d5af41da9, type: 3}
+  - {fileID: 21300000, guid: 3fa099d20c5af3c4fabc88da9cae6187, type: 3}
+  fps: 6
+  loop: 1
+  playOnEnable: 1
