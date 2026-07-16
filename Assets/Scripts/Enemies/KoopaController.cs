@@ -13,6 +13,9 @@ public class KoopaController : EnemyBase, IStompable
     [SerializeField] private KState state = KState.Walking;
     [SerializeField] private float shellSpeed = 9f;
     [SerializeField] private float shellSquash = 0.6f;
+    [SerializeField] private Sprite shellSprite;
+    [SerializeField] private Sprite[] spinFrames;
+    [SerializeField] private float spinFps = 14f;
 
     private int shellDir = 1;
 
@@ -27,6 +30,7 @@ public class KoopaController : EnemyBase, IStompable
         {
             if (ShellHitsWall()) shellDir = -shellDir;
             rb.linearVelocity = new Vector2(shellDir * shellSpeed, rb.linearVelocity.y);
+            KillEnemiesInPath();
         }
         else // Shell idle
         {
@@ -42,18 +46,24 @@ public class KoopaController : EnemyBase, IStompable
         return Physics2D.Raycast(origin, new Vector2(dirX, 0f), 0.12f, groundMask);
     }
 
+    // A sliding shell mows down enemies it overlaps (they no longer collide physically).
+    private void KillEnemiesInPath()
+    {
+        Bounds b = col.bounds;
+        var hits = Physics2D.OverlapBoxAll(b.center, b.size, 0f, 1 << gameObject.layer);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            var other = hits[i].GetComponent<EnemyBase>();
+            if (other != null && other != this && !other.IsDead) other.Die();
+        }
+    }
+
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (dead) return;
-        if (collision.collider.CompareTag("Player"))
-        {
-            HandlePlayer(collision);
-        }
-        else if (state == KState.Sliding)
-        {
-            var other = collision.collider.GetComponent<EnemyBase>();
-            if (other != null && other != this && !other.IsDead) other.Die();
-        }
+        // Enemy-vs-enemy no longer collides physically; only the player is handled here.
+        if (collision.collider.CompareTag("Player")) HandlePlayer(collision);
     }
 
     private void HandlePlayer(Collision2D collision)
@@ -80,15 +90,10 @@ public class KoopaController : EnemyBase, IStompable
     public void OnStomped(PlayerController player)
     {
         if (dead) return;
-        if (state == KState.Walking)
+        if (state == KState.Walking || state == KState.Sliding)
         {
             state = KState.Shell;
-            Squash();
-            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-        }
-        else if (state == KState.Sliding)
-        {
-            state = KState.Shell;
+            ShowShell();
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         }
         // Shell idle + stomp: just bounce the player.
@@ -100,12 +105,24 @@ public class KoopaController : EnemyBase, IStompable
         float dir = Mathf.Sign(transform.position.x - sourceX);
         shellDir = dir == 0 ? 1 : (int)dir;
         state = KState.Sliding;
+        var fb = GetComponent<SpriteFlipbook>();
+        if (fb != null && spinFrames != null && spinFrames.Length > 0)
+        {
+            fb.SetFps(spinFps);
+            fb.Play(spinFrames);
+        }
     }
 
-    private void Squash()
+    private void ShowShell()
     {
+        var fb = GetComponent<SpriteFlipbook>();
+        if (fb != null) fb.Stop();
         if (sr == null) return;
-        var t = sr.transform;
-        t.localScale = new Vector3(t.localScale.x, t.localScale.y * shellSquash, 1f);
+        if (shellSprite != null) sr.sprite = shellSprite;
+        else
+        {
+            var t = sr.transform;
+            t.localScale = new Vector3(t.localScale.x, t.localScale.y * shellSquash, 1f);
+        }
     }
 }

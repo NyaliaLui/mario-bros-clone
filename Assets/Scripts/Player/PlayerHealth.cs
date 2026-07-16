@@ -48,8 +48,11 @@ public class PlayerHealth : MonoBehaviour, IDamageReceiver
         if (col != null) { col.size = size; col.offset = off; }
         if (visual != null)
         {
-            visual.localScale = new Vector3(size.x, size.y, 1f);
+            // Real Small/Big art has correct proportions — no scaling, just recenter.
+            visual.localScale = Vector3.one;
             visual.localPosition = new Vector3(off.x, off.y, 0f);
+            var anim = visual.GetComponent<PlayerSpriteAnimator>();
+            if (anim != null) anim.SetBig(big);
         }
     }
 

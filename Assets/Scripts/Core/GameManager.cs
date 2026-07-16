@@ -114,8 +114,13 @@ public class GameManager : MonoBehaviour
             CurrentState = State.GameOver;
             GameEvents.GameOver();
             yield return new WaitForSecondsRealtime(gameOverDelay);
+            // Return to the Main Menu (build index 0). Drop this persistent
+            // manager so the next Play starts a clean run.
             Score = 0; Coins = 0; Lives = startingLives;
-            ReloadLevel();
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            Instance = null;
+            Destroy(gameObject);
+            SceneManager.LoadScene(0);
         }
     }
 
